@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-
+import practice from "./practice.js";   
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ const logging = (request, response, next) => {
   next();
 };
 app.use(cors());
-app.use(express.json)
+app.use(express.json())
 app.use(logging);
 
 mongoose.connect(process.env.MONGODB);
@@ -24,7 +24,9 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Successfully opened connection to Mongo!");
 });
-
+app.get("/", (request, response) => {
+   response.send("Welcome to the Class SPA REST API");
+});
 // Handle the request with HTTP GET method from http://localhost:3000/status
 app.get("/status", (request, response) => {
    // Create the headers for response by default 200
@@ -43,7 +45,7 @@ app.get("/echo/:text", (request, response) => {
     }
    response.status(418).send(`You told me to echo ${output}`);
 })
-
+app.use("/practice", practice);
 // Tell the Express app to start listening
 // Let the humans know I am running and listening on 3000
 const server = app.listen(PORT, () => console.log(`Listening on port ${server.address().port}`));
